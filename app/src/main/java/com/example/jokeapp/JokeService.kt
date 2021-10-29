@@ -5,7 +5,7 @@ import retrofit2.http.GET
 
 interface JokeService {
 
-    @GET("https://karljoke.herokuapp.com/jokes/random")
+    @GET("https://joke.deno.dev")
     fun getJoke() : Call<JokeDTO>
 }
 
