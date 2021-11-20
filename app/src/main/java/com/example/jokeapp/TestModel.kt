@@ -2,7 +2,7 @@ package com.example.jokeapp
 
 class TestModel(resourceManager: ResourceManager) : Model {
 
-    private var callback: ResultCallback? = null
+    private var callback: JokeCallback? = null
     private var count = 0
     private val noConnection = NoConnection(resourceManager)
     private val serviceUnavailable = ServiceUnavailable(resourceManager)
@@ -12,20 +12,28 @@ class TestModel(resourceManager: ResourceManager) : Model {
         Thread {
             Thread.sleep(1000)
             when (count) {
-                0 -> callback?.provideSuccess(Joke("testText", "testPunchline"))
-                1 -> callback?.provideError(noConnection)
-                2 -> callback?.provideError(serviceUnavailable)
+                0 -> callback?.provide(BaseJoke("baseText", "basePunchline"))
+                1 -> callback?.provide(FavoriteJoke("favoriteJokeText","favoritePunchline"))
+                2 -> callback?.provide(FailedJoke(serviceUnavailable.getMessage()))
             }
             count++
             if (count == 3) count = 0
         }.start()
     }
 
-    override fun init(callback: ResultCallback) {
+    override fun init(callback: JokeCallback) {
         this.callback = callback
+    }
+
+    override fun changeJokeStatus(jokeCallback: JokeCallback) {
+        TODO("Not yet implemented")
     }
 
     override fun clear() {
         callback = null
+    }
+
+    override fun chooseDataSource(cached: Boolean) {
+        TODO("Not yet implemented")
     }
 }

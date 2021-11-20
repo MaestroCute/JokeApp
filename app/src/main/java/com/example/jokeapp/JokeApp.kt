@@ -1,7 +1,6 @@
 package com.example.jokeapp
 
 import android.app.Application
-import com.google.gson.Gson
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
@@ -18,9 +17,9 @@ class JokeApp : Application() {
             .build()
         viewModel = ViewModel(
             BaseModel(
-                retrofit.create(JokeService::class.java),
-                BaseResourceManager(this)
-            )
+                TestCacheDataSource(),
+                BaseCloudDataSource(retrofit.create(JokeService::class.java)),
+                BaseResourceManager(this))
         )
     }
 }

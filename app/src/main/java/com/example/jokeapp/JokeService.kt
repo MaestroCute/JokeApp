@@ -6,16 +6,16 @@ import retrofit2.http.GET
 interface JokeService {
 
     @GET("https://joke.deno.dev")
-    fun getJoke() : Call<JokeDTO>
+    fun getJoke() : Call<JokeServerModel>
 }
 
-interface ServiceCallback {
-    fun returnSuccess(data: JokeDTO)
-
-    fun returnError(type: ErrorType)
-}
-
-enum class ErrorType {
-    NO_CONNECTION,
-    OTHER
-}
+//interface ServiceCallback {
+//    fun returnSuccess(data: JokeServerModel)
+//
+//    fun returnError(type: ErrorType)
+//}
+//
+//enum class ErrorType {
+//    NO_CONNECTION,
+//    OTHER
+//}
