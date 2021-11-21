@@ -1,9 +1,5 @@
 package com.example.jokeapp
 
-import retrofit2.Call
-import retrofit2.Response
-import java.net.UnknownHostException
-
 class BaseModel(
     private val cacheDataSource: CacheDataSource,
     private val cloudDataSource: CloudDataSource,
@@ -16,7 +12,7 @@ class BaseModel(
 
     private var jokeCallback: JokeCallback? = null
 
-    private var cachedJokeServerModel: JokeServerModel? = null
+    private var cachedJoke: Joke? = null
 
     private var getJokeFromCache = false
 
@@ -27,28 +23,28 @@ class BaseModel(
     override fun getJoke() {
         if (getJokeFromCache) {
             cacheDataSource.getJoke(object : JokeCachedCallback {
-                override fun provide(jokeServerModel: JokeServerModel) {
-                    cachedJokeServerModel = jokeServerModel
-                    jokeCallback?.provide(jokeServerModel.toFavoriteJoke())
+                override fun provide(joke: Joke) {
+                    cachedJoke = joke
+                    jokeCallback?.provide(joke.toFavoriteJoke())
                 }
 
                 override fun fail() {
-                    cachedJokeServerModel = null
-                    jokeCallback?.provide(FailedJoke(noCachedJokes.getMessage()))
+                    cachedJoke = null
+                    jokeCallback?.provide(FailedJokeUiModel(noCachedJokes.getMessage()))
                 }
             })
         } else {
             cloudDataSource.getJoke(object : JokeCloudCallback {
-                override fun provide(joke: JokeServerModel) {
-                    cachedJokeServerModel = joke
+                override fun provide(joke: Joke) {
+                    cachedJoke = joke
                     jokeCallback?.provide(joke.toBaseJoke())
                 }
 
                 override fun fail(error: ErrorType) {
-                    cachedJokeServerModel = null
+                    cachedJoke = null
                     val failure =
                         if (error == ErrorType.NO_CONNETCTION) noConnection else serviceUnavailable
-                    jokeCallback?.provide(FailedJoke(failure.getMessage()))
+                    jokeCallback?.provide(FailedJokeUiModel(failure.getMessage()))
                 }
 
             })
@@ -56,7 +52,7 @@ class BaseModel(
     }
 
     override fun changeJokeStatus(jokeCallback: JokeCallback) {
-        cachedJokeServerModel?.change(cacheDataSource)?.let {
+        cachedJoke?.change(cacheDataSource)?.let {
             jokeCallback.provide(it)
         }
     }

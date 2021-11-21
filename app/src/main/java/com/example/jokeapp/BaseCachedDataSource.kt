@@ -12,7 +12,7 @@ class BaseCachedDataSource(private val realm: Realm) : CacheDataSource {
             else
                 jokes.random().let { joke ->
                     jokeCachedCallback.provide(
-                        JokeServerModel(
+                        Joke(
                             joke.id,
                             joke.type,
                             joke.text,
@@ -23,20 +23,20 @@ class BaseCachedDataSource(private val realm: Realm) : CacheDataSource {
         }
     }
 
-    override fun addOrRemove(id: Int, jokeServerModel: JokeServerModel): Joke {
+    override fun addOrRemove(id: Int, joke: Joke): JokeUiModel {
         realm.let {
             val jokeRealm = it.where(JokeRealm::class.java).equalTo("id", id).findFirst()
             return if(jokeRealm == null) {
-                val newJoke = jokeServerModel.toJokeRealm()
+                val newJoke = joke.toJokeRealm()
                 it.executeTransactionAsync { transaction ->
                     transaction.insert(newJoke)
                 }
-                jokeServerModel.toFavoriteJoke()
+                joke.toFavoriteJoke()
             } else {
                 it.executeTransactionAsync {
                     jokeRealm.deleteFromRealm()
                 }
-                jokeServerModel.toBaseJoke()
+                joke.toBaseJoke()
             }
         }
     }
