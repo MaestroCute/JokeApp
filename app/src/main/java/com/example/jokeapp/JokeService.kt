@@ -7,15 +7,5 @@ interface JokeService {
 
     @GET("https://joke.deno.dev")
     fun getJoke() : Call<JokeServerModel>
-}
 
-//interface ServiceCallback {
-//    fun returnSuccess(data: JokeServerModel)
-//
-//    fun returnError(type: ErrorType)
-//}
-//
-//enum class ErrorType {
-//    NO_CONNECTION,
-//    OTHER
-//}
+}

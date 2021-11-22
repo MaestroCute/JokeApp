@@ -4,7 +4,6 @@ import android.app.Application
 import io.realm.Realm
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 
 class JokeApp : Application() {
 
@@ -19,7 +18,7 @@ class JokeApp : Application() {
             .build()
         viewModel = ViewModel(
             BaseModel(
-                BaseCachedDataSource(Realm.getDefaultInstance()),
+                BaseCachedDataSource(BaseRealmProvider()),
                 BaseCloudDataSource(retrofit.create(JokeService::class.java)),
                 BaseResourceManager(this))
         )

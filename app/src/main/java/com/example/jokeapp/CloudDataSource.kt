@@ -1,12 +1,7 @@
 package com.example.jokeapp
 
 interface CloudDataSource {
-    fun getJoke(callback: JokeCloudCallback)
-}
-
-interface JokeCloudCallback {
-    fun provide(joke: Joke)
-    fun fail(errorType: ErrorType)
+    suspend fun getJoke() : Result<JokeServerModel, ErrorType>
 }
 
 enum class ErrorType {
